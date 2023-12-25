@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <title>Javascript Challenge Day 4 With Hablu Programmer </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+    *{
+    margin:0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f1f1f1;
+    height: 100vh;
+}
+.AppBody {
+    border:3px dotted #d1d6d6;
+    width: 700px;
+    height: 500px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.AppBody.active {
+    border: 3px solid rgb(49, 168, 12);
+}
+.icon {
+    font-size: 100px;
+    color: rgba(13, 204, 45, 0.651);
+}
+.AppBody h3 {
+    font-size: 30px;
+    font-weight: 500;
+    color: #333;
+}
+.AppBody span { 
+    font-size: 25px;
+    font-weight: 500;
+    color: #333;
+    margin: 10px 0 15px 0;
+}
+.AppBody button {
+  padding: 10px 25px;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  background: #fff;
+ color: rgba(13, 204, 45, 0.651);
+  border-radius: 5px;
+  cursor: pointer; 
+}
+.AppBody img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+    <body>
+        <div class="AppBody">
+            <div class="icon">
+                <i class="fas fa-images"></i>
+            </div>
+    
+             <h3>Drag & Drop</h3>
+            <span>OR</span>
+            <button>Browse File</button>
+            <input type="file" hidden>
+    
+        </div>
+        <script src="script.js"></script>
+    </body>
+
+    <script>
+        const DragArea = document.querySelector(".AppBody"),
+        DragText = DragArea.querySelector("h3"),
+        button = DragArea.querySelector("button"),
+        input  = DragArea.querySelector("input");
+        let Myfile ; 
+
+
+
+button.onclick  = () => {
+    input.click()
+}
+
+input.addEventListener("change" ,function(){
+    Myfile = this.files[0];
+    DragArea.classList.add("active"); 
+    ShowMe()
+    
+})
+
+DragArea.addEventListener("dragover", (event)=> {
+event.preventDefault(); 
+DragArea.classList.add("active"); 
+
+DragText.textContent = "Release to Upload File";
+
+} ) 
+
+DragArea.addEventListener("dragleave",  ()=> {
+    DragArea.classList.remove("active"); 
+    DragText.textContent = "Drag & Drop";
+}); 
+
+
+DragArea.addEventListener("drop", (event)=>{ 
+    event.preventDefault();
+    Myfile = event.dataTransfer.files[0];
+
+    ShowMe()
+})
+
+function ShowMe(){
+    let filetype = Myfile.type; 
+    let VaildEx =  ["image/jpeg", "image/jpg", "image/png"];
+
+    if(VaildEx.includes(filetype)){
+        
+      let fileReader  = new FileReader(); 
+
+      fileReader.onload = () => {
+          let imgUrl = fileReader.result; 
+          let img  = `<img src="${imgUrl}" alt="">`
+
+          DragArea.innerHTML = img
+      }
+      fileReader.readAsDataURL(Myfile); 
+    }
+    else  {
+        alert("This file is not valid"); 
+        DragArea.classList.remove("active"); 
+        DragText.textContent = "Drag & Drop";
+    }
+}
+
+
+    </script>
+    <!-- <script>
+        var dragbody=document.querySelector(".AppBody");
+       var input= dragbody.querySelector("input");
+       var dragtext=dragbody.querySelector("h3");
+       let myFile;
+
+        dragbody.addEventListener("click",function button(){
+            input.click()
+        })
+
+        input.addEventListener("change", function(){
+          myFile=this.files[0];
+            dragbody.classList.add("active");
+            showMe();
+        })
+        dragbody.addEventListener("dragover",function(event){
+            event.preventDefault();
+            dragbody.classList.add("active");
+            dragtext.textContent="Release to upload files";
+        })
+        dragbody.addEventListener("dragleave",function(){
+            dragbody.classList.remove("active");
+            dragtext.textContent="Drag & Drop";
+        })
+        dragbody.addEventListener("drop",function(event){
+            event.preventDefault();
+            myFile= event.dataTransfer.files[0];
+            showMe();
+        })
+        function showMe(){
+            let fileType=myFile.type;
+         
+            let valiDex= ["image/jpeg", "image/jpg", "image/png"]
+            if(valiDex.includes(fileType)){
+        
+                    let filereader  = new FileReader(); 
+                    fileReader.onload = () => {
+                        let imgUrl = filereader.result; 
+          let img  = `<img src="${imgUrl}" alt="">`
+
+                    dragbody.innerHTML=img;
+                }
+                filereader.readAsDataURL(myFile); 
+            }
+            else{
+                alert("This file is not valid");
+                dragbody.classList.remove("active");
+            dragtext.textContent="Drag & Drop";
+            }
+        }
+
+
+   
+    </script> -->
+
+</body>
+</html>
